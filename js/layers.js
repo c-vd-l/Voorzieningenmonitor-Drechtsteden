@@ -1403,6 +1403,8 @@ var title = L.DomUtil.create('h1', '', titleContainer);
 title.innerHTML = 'VOORZIENINGENMONITOR DRECHTSTEDEN';
 title.style.color = '#144673';
 title.style.fontFamily = '"Roboto Condensed", sans-serif';
+title.style.fontSize = '32px';
+title.style.fontWeight = '700';
 title.style.margin = '0';
 
 var mapContainer = document.getElementById('map');
@@ -1416,6 +1418,13 @@ map.invalidateSize();
 var layerControl = L.control.layers.tree(baseMaps, overlaysTree, {
     collapsed: false
 }).addTo(map);
-
+// Remove the a.leaflet-control-layers-toggle flex item
+var layersControlContainer = document.querySelector('.leaflet-control-layers');
+if (layersControlContainer) {
+    var toggleButton = layersControlContainer.querySelector('.leaflet-control-layers-toggle');
+    if (toggleButton) {
+        layersControlContainer.removeChild(toggleButton);
+    }
+}
 
 L.control.scale({imperial: false}).addTo(map);
