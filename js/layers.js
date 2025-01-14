@@ -1426,5 +1426,5 @@ if (layersControlContainer) {
         layersControlContainer.removeChild(toggleButton);
     }
 }
-
 L.control.scale({imperial: false}).addTo(map);
+map.invalidateSize();
