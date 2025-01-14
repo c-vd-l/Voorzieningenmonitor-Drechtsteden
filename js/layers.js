@@ -1412,7 +1412,6 @@ mapContainer.parentNode.insertBefore(titleContainer, mapContainer);
 
 // Adjust the map container height
 mapContainer.style.height = `calc(100% - ${titleContainer.offsetHeight}px)`;
-map.invalidateSize();
 
 // Adjust the max height for the control layers tree
 var layerControl = L.control.layers.tree(baseMaps, overlaysTree, {
