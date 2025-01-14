@@ -1,3 +1,6 @@
+/* Import Roboto font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap');
+
 /* required styles */
 
 .leaflet-pane,
@@ -267,7 +270,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* general typography */
 .leaflet-container {
-	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 12px/1.5 "Roboto", sans-serif;
 	}
 
 
