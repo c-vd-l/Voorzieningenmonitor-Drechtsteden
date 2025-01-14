@@ -175,7 +175,7 @@
             cursor: pointer;
         }
         .leaflet-control-layers-expanded .leaflet-control-layers-toggle::after {
-            content: '';
+            content: '»';
             font-size: x-large;
             color: #444444 !important;
             display: flex;

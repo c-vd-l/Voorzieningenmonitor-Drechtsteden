@@ -32,6 +32,16 @@ function addClassToPopupIfMedia(content, popup) {
         popup._contentNode.classList.remove('media');
     }
 }
+var title = new L.Control({'position':'topleft'});
+title.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+};
+title.update = function () {
+    this._div.innerHTML = '<div style="display: flex; align-items: center;"><img src="images/logo.png" style="height: 40px; margin-right: 10px;"><h2 style="font-family: \'Roboto Condensed\', sans-serif; font-size: 40px; color: #144673; margin: 0;">VOORZIENINGENMONITOR DRECHTSTEDEN</h2></div>';
+};
+title.addTo(map);
 var zoomControl = L.control.zoom({
     position: 'topleft'
 }).addTo(map);
@@ -1381,50 +1391,66 @@ var overlaysTree = [
     //     ]
     // }
 ];
-
-// Add title and logo
-var titleContainer = L.DomUtil.create('div', 'title-container');
-titleContainer.style.display = 'flex';
-titleContainer.style.justifyContent = 'center';
-titleContainer.style.alignItems = 'center';
-titleContainer.style.padding = '10px';
-titleContainer.style.backgroundColor = '';
-titleContainer.style.opacity = '1';
-titleContainer.style.position = 'relative';
-
-var logo = L.DomUtil.create('img', '', titleContainer);
-logo.src = 'images/logo.png';
-logo.style.height = '40px';
-logo.style.position = 'absolute';
-logo.style.left = '10px';
-logo.style.top = '10px';
-
-var title = L.DomUtil.create('h1', '', titleContainer);
-title.innerHTML = 'VOORZIENINGENMONITOR DRECHTSTEDEN';
-title.style.color = '#144673';
-title.style.fontFamily = '"Roboto Condensed", sans-serif';
-title.style.fontSize = '32px';
-title.style.fontWeight = '700';
-title.style.margin = '0';
-
-var mapContainer = document.getElementById('map');
-mapContainer.parentNode.insertBefore(titleContainer, mapContainer);
-
-// Adjust the map container height
-mapContainer.style.height = `calc(100% - ${titleContainer.offsetHeight}px)`;
-map.invalidateSize();
-
-// Adjust the max height for the control layers tree
-var layerControl = L.control.layers.tree(baseMaps, overlaysTree, {
-    collapsed: false
-}).addTo(map);
-// Remove the a.leaflet-control-layers-toggle flex item
-var layersControlContainer = document.querySelector('.leaflet-control-layers');
-if (layersControlContainer) {
-    var toggleButton = layersControlContainer.querySelector('.leaflet-control-layers-toggle');
-    if (toggleButton) {
-        layersControlContainer.removeChild(toggleButton);
+var lay = L.control.layers.tree(null, overlaysTree,{
+    //namedToggle: true,
+    //selectorBack: false,
+    //closedSymbol: '&#8862; &#x1f5c0;',
+    //openedSymbol: '&#8863; &#x1f5c1;',
+    //collapseAll: 'Collapse all',
+    //expandAll: 'Expand all',
+    collapsed: false, 
+});
+lay.addTo(map);
+document.addEventListener("DOMContentLoaded", function() {
+    // set new Layers List height which considers toggle icon
+    function newLayersListHeight() {
+        var layerScrollbarElement = document.querySelector('.leaflet-control-layers-scrollbar');
+        if (layerScrollbarElement) {
+            var layersListElement = document.querySelector('.leaflet-control-layers-list');
+            var originalHeight = layersListElement.style.height 
+                || window.getComputedStyle(layersListElement).height;
+            var newHeight = parseFloat(originalHeight) - 50;
+            layersListElement.style.height = newHeight + 'px';
+        }
     }
-}
+    var isLayersListExpanded = true;
+    var controlLayersElement = document.querySelector('.leaflet-control-layers');
+    var toggleLayerControl = document.querySelector('.leaflet-control-layers-toggle');
+    // toggle Collapsed/Expanded and apply new Layers List height
+    toggleLayerControl.addEventListener('click', function() {
+        if (isLayersListExpanded) {
+            controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+        } else {
+            controlLayersElement.classList.add('leaflet-control-layers-expanded');
+        }
+        isLayersListExpanded = !isLayersListExpanded;
+        newLayersListHeight()
+    });	
+    // apply new Layers List height if toggle layerstree
+    if (controlLayersElement) {
+        controlLayersElement.addEventListener('click', function(event) {
+            var toggleLayerHeaderPointer = event.target.closest('.leaflet-layerstree-header-pointer span');
+            if (toggleLayerHeaderPointer) {
+                newLayersListHeight();
+            }
+        });
+    }
+    // Collapsed/Expanded at Start to apply new height
+    setTimeout(function() {
+        toggleLayerControl.click();
+    }, 10);
+    setTimeout(function() {
+        toggleLayerControl.click();
+    }, 10);
+    // Collapsed touch/small screen
+    var isSmallScreen = window.innerWidth < 650;
+    if (isSmallScreen) {
+        setTimeout(function() {
+            controlLayersElement.classList.remove('leaflet-control-layers-expanded');
+            isLayersListExpanded = !isLayersListExpanded;
+        }, 500);
+    }  
+});       
+
 L.control.scale({imperial: false}).addTo(map);
 map.invalidateSize();
