@@ -781,7 +781,6 @@ var layer_Buslijnen_19 = new L.geoJson(json_Buslijnen_19, {
     onEachFeature: pop_Buslijnen_19,
     style: style_Buslijnen_19_0,
 });
-map.addLayer(layer_Buslijnen_19);
 bounds_group.addLayer(layer_Buslijnen_19);
 function pop_Bibliotheken_20(feature, layer) {
     var popupContent = '<table>\
