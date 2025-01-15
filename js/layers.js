@@ -1391,7 +1391,7 @@ var overlaysTree = [
     //     ]
     // }
 ];
-var lay = L.control.layers.tree(null, overlaysTree,{
+var lay = L.control.layers.tree(baseMaps, overlaysTree,{
     //namedToggle: true,
     //selectorBack: false,
     //closedSymbol: '&#8862; &#x1f5c0;',
@@ -1453,4 +1453,4 @@ document.addEventListener("DOMContentLoaded", function() {
 });       
 
 L.control.scale({imperial: false}).addTo(map);
-map.invalidateSize();
+
